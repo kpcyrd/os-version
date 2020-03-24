@@ -1,0 +1,20 @@
+[package]
+name = "os-version"
+version = "0.1.0"
+description = "Get the operating system version"
+authors = ["kpcyrd <git@rxv.cc>"]
+license = "MIT/Apache-2.0"
+repository = "https://github.com/kpcyrd/os-version"
+edition = "2018"
+
+[dependencies]
+anyhow = "1.0.27"
+
+[target.'cfg(target_os="macos")'.dependencies]
+plist = "0.5.3"
+
+[target.'cfg(target_os="windows")'.dependencies]
+winapi = { version = "0.3.8", features = ["libloaderapi", "ntstatus", "sysinfoapi", "winnt", "winuser"] }
+
+[target.'cfg(target_os="openbsd")'.dependencies]
+uname = "0.1.1"
