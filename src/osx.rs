@@ -8,7 +8,7 @@ pub struct OSX {
 impl OSX {
     #[cfg(target_os="macos")]
     pub fn detect() -> Result<OSX> {
-        let file = fs::read_to_string("/System/Library/CoreServices/SystemVersion.plist")?;
+        let file = std::fs::read_to_string("/System/Library/CoreServices/SystemVersion.plist")?;
         parse(&file)
     }
 
@@ -35,6 +35,10 @@ fn parse(file: &str) -> Result<OSX> {
         .ok_or_else(|| Error::msg("SystemVersion.plist is not a dictionary"))?
         .get("ProductVersion")
         .ok_or_else(|| Error::msg("ProductVersion is missing"))?;
+
+    let version = version.as_string()
+        .ok_or_else(|| Error::msg("Version is not a string"))?
+        .to_string();
 
     Ok(OSX {
         version,
