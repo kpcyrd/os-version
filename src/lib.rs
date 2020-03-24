@@ -6,6 +6,8 @@ mod osx;
 pub use crate::osx::OSX;
 mod windows;
 pub use crate::windows::Windows;
+mod android;
+pub use crate::android::Android;
 mod openbsd;
 pub use crate::openbsd::OpenBSD;
 
@@ -19,6 +21,8 @@ pub fn detect() -> Result<OsVersion> {
         Ok(OsVersion::OSX(OSX::detect()?))
     } else if cfg!(target_os = "windows") {
         Ok(OsVersion::Windows(Windows::detect()?))
+    } else if cfg!(target_os = "android") {
+        Ok(OsVersion::Android(Android::detect()?))
     } else if cfg!(target_os = "openbsd") {
         Ok(OsVersion::OpenBSD(OpenBSD::detect()?))
     } else {
@@ -27,10 +31,12 @@ pub fn detect() -> Result<OsVersion> {
 }
 
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum OsVersion {
     Linux(Linux),
     OSX(OSX),
     Windows(Windows),
+    Android(Android),
     OpenBSD(OpenBSD),
     Unknown,
 }
@@ -41,6 +47,7 @@ impl ToString for OsVersion {
             OsVersion::Linux(v) => v.to_string(),
             OsVersion::OSX(v) => v.to_string(),
             OsVersion::Windows(v) => v.to_string(),
+            OsVersion::Android(v) => v.to_string(),
             OsVersion::OpenBSD(v) => v.to_string(),
             OsVersion::Unknown => String::from("unknown"),
         }
