@@ -1,6 +1,6 @@
 // borrowed from https://github.com/DarkEld3r/os_info/blob/master/src/windows/winapi.rs
 
-use anyhow::{Result, bail};
+use anyhow::{bail, Result};
 use std::mem;
 use winapi::{
     shared::{
@@ -52,7 +52,10 @@ fn get_proc_address(module: &[u8], proc: &[u8]) -> Result<FARPROC> {
 
     let handle = unsafe { GetModuleHandleA(module.as_ptr() as LPCSTR) };
     if handle.is_null() {
-        bail!("GetModuleHandleA({}) failed", String::from_utf8_lossy(module));
+        bail!(
+            "GetModuleHandleA({}) failed",
+            String::from_utf8_lossy(module)
+        );
     }
 
     unsafe { Ok(GetProcAddress(handle, proc.as_ptr() as LPCSTR)) }
@@ -96,7 +99,7 @@ pub fn edition(version_info: &OSVERSIONINFOEX) -> String {
             } else {
                 "server 2003".to_string()
             }
-        },
+        }
         (major, minor, _) => format!("{}.{}", major, minor),
     }
 }
