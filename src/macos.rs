@@ -20,7 +20,7 @@ impl MacOS {
 
 impl ToString for MacOS {
     fn to_string(&self) -> String {
-        format!("osx {}", self.version)
+        format!("macOS {}", self.version)
     }
 }
 
@@ -52,7 +52,7 @@ mod tests {
 
     #[test]
     #[cfg(target_os = "macos")]
-    fn detect_osx() {
+    fn detect_macos() {
         let version = parse(r#"<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
