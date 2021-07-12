@@ -71,6 +71,7 @@ fn parse_value(mut value: &str) -> Result<String> {
 
 #[cfg(test)]
 mod tests {
+    #[cfg(target_os="linux")]
     use super::*;
 
     #[test]

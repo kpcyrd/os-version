@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct OSX {
     pub version: String,
 }
@@ -47,6 +47,9 @@ fn parse(file: &str) -> Result<OSX> {
 
 #[cfg(test)]
 mod tests {
+    #[cfg(target_os="macos")]
+    use super::*;
+
     #[test]
     #[cfg(target_os="macos")]
     fn detect_osx() {
@@ -66,7 +69,7 @@ mod tests {
     <string>10.13.6</string>
 </dict>
 </plist>
-"#);
+"#).unwrap();
         assert_eq!(OSX {
             version: "10.13.6".to_string(),
         }, version);
