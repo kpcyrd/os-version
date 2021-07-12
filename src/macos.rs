@@ -1,31 +1,31 @@
 use anyhow::Result;
 
 #[derive(Debug, PartialEq)]
-pub struct OSX {
+pub struct MacOS {
     pub version: String,
 }
 
-impl OSX {
+impl MacOS {
     #[cfg(target_os = "macos")]
-    pub fn detect() -> Result<OSX> {
+    pub fn detect() -> Result<MacOS> {
         let file = std::fs::read_to_string("/System/Library/CoreServices/SystemVersion.plist")?;
         parse(&file)
     }
 
     #[cfg(not(target_os = "macos"))]
-    pub fn detect() -> Result<OSX> {
+    pub fn detect() -> Result<MacOS> {
         unreachable!()
     }
 }
 
-impl ToString for OSX {
+impl ToString for MacOS {
     fn to_string(&self) -> String {
         format!("osx {}", self.version)
     }
 }
 
 #[cfg(target_os = "macos")]
-fn parse(file: &str) -> Result<OSX> {
+fn parse(file: &str) -> Result<MacOS> {
     use anyhow::Error;
 
     let cur = std::io::Cursor::new(file.as_bytes());
@@ -42,7 +42,7 @@ fn parse(file: &str) -> Result<OSX> {
         .ok_or_else(|| Error::msg("Version is not a string"))?
         .to_string();
 
-    Ok(OSX { version })
+    Ok(MacOS { version })
 }
 
 #[cfg(test)]
@@ -71,7 +71,7 @@ mod tests {
 </plist>
 "#).unwrap();
         assert_eq!(
-            OSX {
+            MacOS {
                 version: "10.13.6".to_string(),
             },
             version
