@@ -4,6 +4,7 @@ use anyhow::Result;
 pub struct Linux {
     pub distro: String,
     pub version: Option<String>,
+    pub version_name: Option<String>,
 }
 
 impl Linux {
@@ -35,12 +36,17 @@ fn parse(file: &str) -> Result<Linux> {
 
     let mut distro = None;
     let mut version = None;
+    let mut version_name = None;
 
     for line in file.lines() {
-        if line.starts_with("ID=") {
-            distro = Some(parse_value(line)?);
-        } else if line.starts_with("VERSION_ID=") {
-            version = Some(parse_value(line)?);
+        if let Some(remaining) = line.strip_prefix("ID=") {
+            distro = Some(parse_value(remaining)?);
+        } else if let Some(remaining) = line.strip_prefix("VERSION_") {
+            if let Some(remaining) = remaining.strip_prefix("ID=") {
+                version = Some(parse_value(remaining)?);
+            } else if let Some(remaining) = remaining.strip_prefix("CODENAME=") {
+                version_name = Some(parse_value(remaining)?);
+            }
         }
     }
 
@@ -50,14 +56,12 @@ fn parse(file: &str) -> Result<Linux> {
     Ok(Linux {
         distro,
         version,
+        version_name,
     })
 }
 
 #[cfg(target_os="linux")]
-fn parse_value(line: &str) -> Result<String> {
-    let idx = line.find('=').unwrap();
-    let mut value = &line[idx+1..];
-
+fn parse_value(mut value: &str) -> Result<String> {
     if value.starts_with('"') && value.ends_with('"') && value.len() >= 2 {
         value = &value[1..value.len()-1];
     }
@@ -85,6 +89,7 @@ BUG_REPORT_URL="https://bugs.debian.org/"
         assert_eq!(Linux {
             distro: "debian".to_string(),
             version: Some("10".to_string()),
+            version_name: Some("buster".to_string()),
         }, os_release);
     }
 
@@ -106,6 +111,7 @@ LOGO=archlinux
         assert_eq!(Linux {
             distro: "arch".to_string(),
             version: None,
+            version_name: None,
         }, os_release);
     }
 
@@ -123,6 +129,7 @@ BUG_REPORT_URL="https://bugs.alpinelinux.org/"
         assert_eq!(Linux {
             distro: "alpine".to_string(),
             version: Some("3.11.5".to_string()),
+            version_name: None,
         }, os_release);
     }
 
@@ -146,6 +153,7 @@ UBUNTU_CODENAME=bionic
         assert_eq!(Linux {
             distro: "ubuntu".to_string(),
             version: Some("18.04".to_string()),
+            version_name: Some("bionic".to_string()),
         }, os_release);
     }
 
@@ -174,6 +182,7 @@ REDHAT_SUPPORT_PRODUCT_VERSION="8"
         assert_eq!(Linux {
             distro: "centos".to_string(),
             version: Some("8".to_string()),
+            version_name: None,
         }, os_release);
     }
 }
