@@ -1,17 +1,15 @@
 use anyhow::Result;
 
 #[derive(Debug, PartialEq)]
-pub struct Android {
-}
+pub struct Android {}
 
 impl Android {
-    #[cfg(target_os="android")]
+    #[cfg(target_os = "android")]
     pub fn detect() -> Result<Android> {
-        Ok(Android {
-        })
+        Ok(Android {})
     }
 
-    #[cfg(not(target_os="android"))]
+    #[cfg(not(target_os = "android"))]
     pub fn detect() -> Result<Android> {
         unreachable!()
     }

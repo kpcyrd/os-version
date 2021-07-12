@@ -11,7 +11,7 @@ pub use crate::android::Android;
 mod openbsd;
 pub use crate::openbsd::OpenBSD;
 
-#[cfg(target_os="windows")]
+#[cfg(target_os = "windows")]
 mod winapi;
 
 pub fn detect() -> Result<OsVersion> {

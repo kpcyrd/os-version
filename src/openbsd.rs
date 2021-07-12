@@ -6,7 +6,7 @@ pub struct OpenBSD {
 }
 
 impl OpenBSD {
-    #[cfg(target_os="openbsd")]
+    #[cfg(target_os = "openbsd")]
     pub fn detect() -> Result<OpenBSD> {
         let uname = uname::Info::new()?;
         Ok(OpenBSD {
@@ -14,7 +14,7 @@ impl OpenBSD {
         })
     }
 
-    #[cfg(not(target_os="openbsd"))]
+    #[cfg(not(target_os = "openbsd"))]
     pub fn detect() -> Result<OpenBSD> {
         unreachable!()
     }
