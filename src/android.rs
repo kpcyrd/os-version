@@ -1,6 +1,7 @@
 use anyhow::Result;
+use std::fmt;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Android {}
 
 impl Android {
@@ -15,8 +16,8 @@ impl Android {
     }
 }
 
-impl ToString for Android {
-    fn to_string(&self) -> String {
-        "android".to_string()
+impl fmt::Display for Android {
+    fn fmt(&self, w: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(w, "android")
     }
 }

@@ -1,6 +1,10 @@
 use anyhow::Result;
+use std::fmt;
 
-#[derive(Debug, PartialEq)]
+#[cfg(target_os = "linux")]
+const PATH: &str = "/etc/os-release";
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct Linux {
     pub distro: String,
     pub version: Option<String>,
@@ -10,7 +14,7 @@ pub struct Linux {
 impl Linux {
     #[cfg(target_os = "linux")]
     pub fn detect() -> Result<Linux> {
-        let file = std::fs::read_to_string("/etc/os-release")?;
+        let file = std::fs::read_to_string(PATH)?;
         parse(&file)
     }
 
@@ -18,14 +22,25 @@ impl Linux {
     pub fn detect() -> Result<Linux> {
         unreachable!()
     }
+
+    #[cfg(all(feature = "tokio", target_os = "linux"))]
+    pub async fn detect_async() -> Result<Linux> {
+        let file = tokio::fs::read_to_string(PATH).await?;
+        parse(&file)
+    }
+
+    #[cfg(all(feature = "tokio", not(target_os = "linux")))]
+    pub async fn detect_async() -> Result<Linux> {
+        unreachable!()
+    }
 }
 
-impl ToString for Linux {
-    fn to_string(&self) -> String {
+impl fmt::Display for Linux {
+    fn fmt(&self, w: &mut fmt::Formatter<'_>) -> fmt::Result {
         if let Some(version) = &self.version {
-            format!("{} {}", self.distro, version)
+            write!(w, "{} {}", self.distro, version)
         } else {
-            self.distro.to_string()
+            write!(w, "{}", self.distro)
         }
     }
 }

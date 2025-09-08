@@ -1,6 +1,7 @@
 use anyhow::Result;
+use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct OpenBSD {
     pub version: String,
 }
@@ -20,8 +21,8 @@ impl OpenBSD {
     }
 }
 
-impl ToString for OpenBSD {
-    fn to_string(&self) -> String {
-        format!("openbsd {}", self.version)
+impl fmt::Display for OpenBSD {
+    fn fmt(&self, w: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(w, "openbsd {}", self.version)
     }
 }
