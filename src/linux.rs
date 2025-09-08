@@ -1,5 +1,8 @@
 use anyhow::Result;
 
+#[cfg(target_os = "linux")]
+const PATH: &str = "/etc/os-release";
+
 #[derive(Debug, PartialEq)]
 pub struct Linux {
     pub distro: String,
@@ -10,12 +13,23 @@ pub struct Linux {
 impl Linux {
     #[cfg(target_os = "linux")]
     pub fn detect() -> Result<Linux> {
-        let file = std::fs::read_to_string("/etc/os-release")?;
+        let file = std::fs::read_to_string(PATH)?;
         parse(&file)
     }
 
     #[cfg(not(target_os = "linux"))]
     pub fn detect() -> Result<Linux> {
+        unreachable!()
+    }
+
+    #[cfg(all(feature = "tokio", target_os = "linux"))]
+    pub async fn detect_async() -> Result<Linux> {
+        let file = tokio::fs::read_to_string(PATH).await?;
+        parse(&file)
+    }
+
+    #[cfg(all(feature = "tokio", not(target_os = "linux")))]
+    pub async fn detect_async() -> Result<Linux> {
         unreachable!()
     }
 }

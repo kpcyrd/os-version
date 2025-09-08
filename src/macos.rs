@@ -1,5 +1,8 @@
 use anyhow::Result;
 
+#[cfg(target_os = "macos")]
+const PATH: &str = "/System/Library/CoreServices/SystemVersion.plist";
+
 #[derive(Debug, PartialEq)]
 pub struct MacOS {
     pub version: String,
@@ -8,12 +11,23 @@ pub struct MacOS {
 impl MacOS {
     #[cfg(target_os = "macos")]
     pub fn detect() -> Result<MacOS> {
-        let file = std::fs::read_to_string("/System/Library/CoreServices/SystemVersion.plist")?;
+        let file = std::fs::read_to_string(PATH)?;
         parse(&file)
     }
 
     #[cfg(not(target_os = "macos"))]
     pub fn detect() -> Result<MacOS> {
+        unreachable!()
+    }
+
+    #[cfg(all(feature = "tokio", target_os = "macos"))]
+    pub async fn detect_async() -> Result<MacOS> {
+        let file = tokio::fs::read_to_string(PATH).await?;
+        parse(&file)
+    }
+
+    #[cfg(all(feature = "tokio", not(target_os = "macos")))]
+    pub async fn detect_async() -> Result<MacOS> {
         unreachable!()
     }
 }

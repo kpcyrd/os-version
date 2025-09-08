@@ -14,6 +14,9 @@ pub use crate::openbsd::OpenBSD;
 #[cfg(target_os = "windows")]
 mod winapi;
 
+#[cfg(feature = "tokio")]
+pub mod tokio;
+
 pub fn detect() -> Result<OsVersion> {
     if cfg!(target_os = "linux") {
         Ok(OsVersion::Linux(Linux::detect()?))
