@@ -1,4 +1,5 @@
 use anyhow::Result;
+use std::fmt;
 
 mod linux;
 pub use crate::linux::Linux;
@@ -44,15 +45,15 @@ pub enum OsVersion {
     Unknown,
 }
 
-impl ToString for OsVersion {
-    fn to_string(&self) -> String {
+impl fmt::Display for OsVersion {
+    fn fmt(&self, w: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            OsVersion::Linux(v) => v.to_string(),
-            OsVersion::MacOS(v) => v.to_string(),
-            OsVersion::Windows(v) => v.to_string(),
-            OsVersion::Android(v) => v.to_string(),
-            OsVersion::OpenBSD(v) => v.to_string(),
-            OsVersion::Unknown => String::from("unknown"),
+            OsVersion::Linux(v) => v.fmt(w),
+            OsVersion::MacOS(v) => v.fmt(w),
+            OsVersion::Windows(v) => v.fmt(w),
+            OsVersion::Android(v) => v.fmt(w),
+            OsVersion::OpenBSD(v) => v.fmt(w),
+            OsVersion::Unknown => write!(w, "unknown"),
         }
     }
 }

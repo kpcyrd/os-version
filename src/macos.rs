@@ -1,4 +1,5 @@
 use anyhow::Result;
+use std::fmt;
 
 #[cfg(target_os = "macos")]
 const PATH: &str = "/System/Library/CoreServices/SystemVersion.plist";
@@ -32,9 +33,9 @@ impl MacOS {
     }
 }
 
-impl ToString for MacOS {
-    fn to_string(&self) -> String {
-        format!("macOS {}", self.version)
+impl fmt::Display for MacOS {
+    fn fmt(&self, w: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(w, "macOS {}", self.version)
     }
 }
 

@@ -1,4 +1,5 @@
 use anyhow::Result;
+use std::fmt;
 
 #[cfg(target_os = "linux")]
 const PATH: &str = "/etc/os-release";
@@ -34,12 +35,12 @@ impl Linux {
     }
 }
 
-impl ToString for Linux {
-    fn to_string(&self) -> String {
+impl fmt::Display for Linux {
+    fn fmt(&self, w: &mut fmt::Formatter<'_>) -> fmt::Result {
         if let Some(version) = &self.version {
-            format!("{} {}", self.distro, version)
+            write!(w, "{} {}", self.distro, version)
         } else {
-            self.distro.to_string()
+            write!(w, "{}", self.distro)
         }
     }
 }

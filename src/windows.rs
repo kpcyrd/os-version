@@ -1,4 +1,5 @@
 use anyhow::Result;
+use std::fmt;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Windows {
@@ -22,8 +23,8 @@ impl Windows {
     }
 }
 
-impl ToString for Windows {
-    fn to_string(&self) -> String {
-        format!("windows {}", self.version)
+impl fmt::Display for Windows {
+    fn fmt(&self, w: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(w, "windows {}", self.version)
     }
 }
