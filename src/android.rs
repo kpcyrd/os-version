@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Android {}
 
 impl Android {

@@ -3,7 +3,7 @@ use anyhow::Result;
 #[cfg(target_os = "macos")]
 const PATH: &str = "/System/Library/CoreServices/SystemVersion.plist";
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct MacOS {
     pub version: String,
 }

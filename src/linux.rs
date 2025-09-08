@@ -3,7 +3,7 @@ use anyhow::Result;
 #[cfg(target_os = "linux")]
 const PATH: &str = "/etc/os-release";
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Linux {
     pub distro: String,
     pub version: Option<String>,

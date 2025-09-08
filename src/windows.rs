@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Windows {
     pub version: String,
 }
